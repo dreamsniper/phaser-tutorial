@@ -28,20 +28,27 @@
             }
         };
 
+        //variables
         var game = new Phaser.Game(config);
+        var platforms;
+        var player;
 
+        //preload
         function preload() {
-            this.load.image('player', 'assets/player.png');
+            //this.load.image('player', 'assets/dude.png');
             this.load.image('sky', 'assets/sky.png');
             this.load.image('ground', 'assets/ground.png');
             this.load.image('rock', 'assets/rock.png');
+            this.load.spritesheet('player', 'assets/dude.png',
+            { frameWidth: 32, frameHeight: 48 });
         }
 
-        var platforms;
-
+        //create function
         function create() {
+            //sky image
             this.add.image(400, 300, 'sky');
 
+            //platforms
             platforms = this.physics.add.staticGroup();
 
             platforms.create(150, 300, 'ground').setScale(.3).refreshBody();
@@ -85,6 +92,8 @@
                 frameRate: 10,
                 repeat: -1
             });
+
+            this.physics.add.collider(player, platforms);
         }
 
         function update() {}
