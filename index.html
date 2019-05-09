@@ -17,7 +17,9 @@
             physics: {
                 default: 'arcade',
                 arcade: {
-                    gravity: {y: 300},
+                    gravity: {
+                        y: 300
+                    },
                     debug: false
                 }
             },
@@ -39,8 +41,10 @@
             this.load.image('sky', 'assets/sky.png');
             this.load.image('ground', 'assets/ground.png');
             this.load.image('rock', 'assets/rock.png');
-            this.load.spritesheet('player', 'assets/dude.png',
-            { frameWidth: 32, frameHeight: 48 });
+            this.load.spritesheet('dude', 'assets/dude.png', {
+                frameWidth: 32,
+                frameHeight: 48
+            });
         }
 
         //create function
@@ -53,20 +57,20 @@
 
             platforms.create(150, 300, 'ground').setScale(.3).refreshBody();
             platforms.create(600, 300, 'ground').setScale(.3).refreshBody();
-            platforms.create(400, 100, 'ground').setScale(.3).refreshBody();
+            platforms.create(400, 150, 'ground').setScale(.3).refreshBody();
 
             platforms.create(400, 600, 'ground');
-            this.add.image(400, 500, 'rock').setScale(.5);
+            platforms.create(400, 500, 'rock');
 
             //player physics
-            player = this.physics.add.sprite(100, 450, 'player');
+            player = this.physics.add.sprite(100, 450, 'dude');
 
             player.setBounce(0.2);
             player.setCollideWorldBounds(true);
 
             this.anims.create({
                 key: 'left',
-                frames: this.anims.generateFrameNumbers('player', {
+                frames: this.anims.generateFrameNumbers('dude', {
                     start: 0,
                     end: 3
                 }),
@@ -77,7 +81,7 @@
             this.anims.create({
                 key: 'turn',
                 frames: [{
-                    key: 'player',
+                    key: 'dude',
                     frame: 4
                 }],
                 frameRate: 20
@@ -85,7 +89,7 @@
 
             this.anims.create({
                 key: 'right',
-                frames: this.anims.generateFrameNumbers('player', {
+                frames: this.anims.generateFrameNumbers('dude', {
                     start: 5,
                     end: 8
                 }),
@@ -96,7 +100,22 @@
             this.physics.add.collider(player, platforms);
         }
 
-        function update() {}
+        function update() {
+            cursors = this.input.keyboard.createCursorKeys();
+            if (cursors.left.isDown) {
+                player.setVelocityX(-160);
+                player.anims.play('left', true);
+            } else if (cursors.right.isDown) {
+                player.setVelocityX(160);
+                player.anims.play('right', true);
+            } else {
+                player.setVelocityX(0);
+                player.anims.play('turn');
+            }
+            if (cursors.up.isDown && player.body.touching.down) {
+                player.setVelocityY(-330);
+            }
+        }
     </script>
 </body>
 </html>
